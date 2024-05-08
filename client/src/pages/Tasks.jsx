@@ -1,14 +1,14 @@
 import React,{useEffect, useState} from 'react'
+import Task from './Task';
 import axios from 'axios';
-import {Link} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {
-  faCircleCheck, faPen, faTrashCan,faAdd
-} from '@fortawesome/free-solid-svg-icons'
+import { faAdd,faFilter } from '@fortawesome/free-solid-svg-icons';
+import {Link} from 'react-router-dom';
 
 
 const Tasks = () => {
     const [tasks, setTasks] = useState([]);
+    const [query, setQuery] = useState(" ");
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -20,73 +20,46 @@ const Tasks = () => {
             }
         }
         fetchTasks();
-    }, [])
-    
-    const handleDelete = async (id) =>{
-      try {
-        await axios.delete("http://localhost:8800/tasks/"+id);
-        window.location.reload();
-      } catch (error) {
-        console.log(error)
-      }
-    }
+    }, [tasks])
 
-    const handleToggle = () => {
-      console.log("isCompleted Toggle Button!")
-    }
 
   return (
     <div className="container App">
+
       <br /><br />
       <h1>TaskFlow</h1>
       <br /><br />
 
       <>
-        <div className="row taskBg">
-          <div className="col-auto iconsWrap">
-            <span>
+        <div className="row py-4">
+          <div className="col">
+            <input 
+              placeholder="Search"
+              type="text"
+              onChange={(e)=>setQuery(e.target.value)}
+              className="form-control form-control-lg"
+            />
+          </div>
+          <div className="col-auto">
+            <button className="btn btn-lg btn-success mx-2">
+              <FontAwesomeIcon icon={faFilter} />
+            </button>
+            <button className="btn btn-lg btn-success">
               <Link className="custom-link" to="/add">
                 <FontAwesomeIcon icon={faAdd} />
               </Link>
-            </span>
+            </button>
           </div>
         </div>
       </>
 
-      <div className="tasks">
-        {tasks.map((task)=>(
-            <React.Fragment key={task.id}>
-              <div className="col taskBg">
-                <div className={task.isCompleted ? "done":""}>
-                  <span className="taskText">{task.description}</span>
-                </div>
-                <div className="iconsWrap">
-                  <span
-                    onClick={handleToggle}
-                  >
-                    <FontAwesomeIcon icon={faCircleCheck} />
-                  </span>
-                  {task.isCompleted ? null : (
-                    <span>
-                      <Link className="custom-link" to={`/update/${task.id}`}>
-                        <FontAwesomeIcon icon={faPen} />
-                      </Link>
-                    </span>
-                  )}
-                  <span
-                    onClick={()=>handleDelete(task.id)}
-                  >
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </span>
-                </div>
-                <div>
-                  <span className="taskText">Priority: {task.priority}</span>
-                  <span className="taskText">Deadline: {task.dueDate}</span>
-                </div>
-              </div>
-            </React.Fragment>
+      {tasks && tasks.length ? "" : "No tasks found..."}
+
+      <>
+        {tasks.filter((task)=>task.description.toLowerCase().includes(query.toLowerCase())).map((task)=>(
+          <Task task={task} key={task.id}/>
         ))}
-      </div>
+      </>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import {BrowserRouter,Routes,Route} from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css'
 import Tasks from './pages/Tasks';
 import Add from './pages/Add';
 import Update from './pages/Update';
