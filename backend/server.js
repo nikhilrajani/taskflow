@@ -55,6 +55,40 @@ app.post("/tasks",(req,res)=>{
     })
 })
 
+app.delete("/tasks/:id",(req,res)=>{
+    const taskId=req.params.id;
+    const q="DELETE FROM tasks WHERE id=?";
+
+    db.query(q,[taskId],(err,data)=>{
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json("Task Deleted Successfully!")
+        }
+    })
+})
+
+app.put("/tasks/:id",(req,res)=>{
+    const taskId=req.params.id;
+    const q="UPDATE tasks SET `description`=?, `priority`=?, `dueDate`=? WHERE id=?";
+
+    const values=[
+        req.body.description,
+        req.body.priority,
+        req.body.dueDate,
+    ]
+
+    db.query(q,[...values,taskId],(err,data)=>{
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json("Task updated Successfully!")
+        }
+    })
+})
+
 app.listen(8800,()=>{
     console.log('Connected to backend! Listening on port 8800!');
 })

@@ -29,7 +29,7 @@ const Add = () => {
     <div className="form">
         <h1>Add new Task</h1>
         <input type="text" placeholder="description" onChange={handleChange} name="description"/>
-        <input type="text" placeholder="priority" onChange={handleChange} name="priority" />
+        <input type="select" placeholder="priority" onChange={handleChange} name="priority" />
         <input type="date" placeholder="dueDate" onChange={handleChange} name="dueDate"/>
 
         <button onClick={handleClick}>Submit</button>
